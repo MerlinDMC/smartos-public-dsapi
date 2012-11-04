@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+
+var path = require('path'),
+    fs = require('fs'),
+    lib = path.join(path.dirname(fs.realpathSync(__filename)), '../lib/');
+
+var uuid = require('node-uuid');
+
+var config = require(lib + 'config');
+
+var db_auth = config.database(config.COUCHDB_AUTH);
+
+var username = process.argv[2];
+var password = process.argv[3];
+var useruuid = process.argv[4];
+
+if (!username || !password) {
+  console.log("Usage: grant-upload <username> <password> [<uuid>]");
+
+  process.exit(1);
+}
+
+db_auth.view('users/username', { key: username, limit: 1 }, function(err, rows) {
+  var user_record = {
+    "_id": useruuid || uuid.v4(),
+    "username": username,
+    "password": password
+  };
+
+  if (rows.length > 0) {
+    console.log("a user with this username already exists.");
+
+    process.exit(1);
+  } else {
+    // add new source
+    db_auth.save(user_record, function(err, doc) {
+      if (err) {
+        if (useruuid) {
+          console.log("a user with this uuid already exists.");
+        } else {
+          console.log("unknown error.");
+        }
+
+        process.exit(1);
+      }
+
+      console.log(user_record);
+    });
+  }
+});

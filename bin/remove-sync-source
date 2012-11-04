@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+
+var path = require('path'),
+    fs = require('fs'),
+    lib = path.join(path.dirname(fs.realpathSync(__filename)), '../lib/');
+
+var config = require(lib + 'config');
+
+var db_sources = config.database(config.COUCHDB_SYNC_SOURCES);
+
+var name = process.argv[2];
+
+if (!name) {
+  console.log("Usage: remove-sync-source <name>");
+
+  process.exit(1);
+}
+
+db_sources.get(name, function(err, doc) {
+  if (err) {
+    console.log("entry not found");
+
+    process.exit(1);
+  } else {
+    // update/change source
+    db_sources.remove(name, doc._rev, function(err, res) {
+      if (!err) {
+        console.log("source removed");
+      }
+    });
+  }
+});

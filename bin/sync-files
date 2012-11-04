@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+
+var path = require('path'),
+    fs = require('fs'),
+    lib = path.join(path.dirname(fs.realpathSync(__filename)), '../lib/');
+
+var config = require(lib + 'config');
+
+var db = config.database(config.COUCHDB_DATASETS);
+var db_queue = config.database(config.COUCHDB_SYNC_FILES);
+
+var uuid = process.argv[2];
+var forced = process.argv[3] === '-f';
+
+if (!uuid) {
+  console.log("Usage: sync-files <manifest uuid> [-f]");
+
+  process.exit(1);
+}
+
+db.get(uuid, function(err, doc) {
+  if (doc.hasOwnProperty('_attachments') && !forced) {
+    console.log("already synced");
+
+    process.exit(0);
+  }
+
+  db_queue.save({ bind_to: { "id": doc._id, "rev": doc._rev }, files: doc.files }, function(err, res) {
+    // files sync daemon will take care of this
+    if (err) {
+      console.log("error adding the sync item to the queue");
+
+      process.exit(1);
+    }
+
+    console.log("files will be synced in background");
+
+    process.exit(0);
+  });
+});

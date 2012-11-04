@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+var path = require('path'),
+    fs = require('fs'),
+    lib = path.join(path.dirname(fs.realpathSync(__filename)), '../lib/');
+
+var config = require(lib + 'config');
+
+var db_auth = config.database(config.COUCHDB_AUTH);
+
+var username = process.argv[2];
+
+if (!username) {
+  console.log("Usage: revoke-upload <username>");
+
+  process.exit(1);
+}
+
+db_auth.view('users/username', { key: username }, function(err, rows) {
+  for (k in rows) {
+    var user = rows[k].value;
+
+    db_auth.remove(user._id, user._rev, function(err, res) {
+      console.log("deleted user record " + user._id + ".");
+    });
+  }
+});

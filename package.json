@@ -1,0 +1,15 @@
+{
+  "name": "dsapi-cache",
+  "version": "0.0.1",
+  "description": "cache a local version of the dsapi service and serve it",
+  "keywords": [ "smartos", "dsapi" ],
+  "dependencies": {
+    "cradle": "0.6.4",
+    "restify": "1.4.4",
+    "mime": "1.2.7",
+    "node-uuid": "1.4.0",
+    "request": "2.11.4",
+    "async": "0.1.22",
+    "bunyan": "0.15.0"
+  }
+}

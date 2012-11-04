@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+
+var path = require('path'),
+    fs = require('fs'),
+    lib = path.join(path.dirname(fs.realpathSync(__filename)), '../lib/');
+
+var config = require(lib + 'config');
+
+var db_sources = config.database(config.COUCHDB_SYNC_SOURCES);
+
+var name = process.argv[2];
+var url = process.argv[3];
+var sync_files = process.argv[4] === '-f';
+
+if (!name || !url) {
+  console.log("Usage: add-sync-source <name> <url> -f");
+
+  process.exit(1);
+}
+
+db_sources.get(name, function(err, doc) {
+  var sync_source = {
+    "url": url,
+    "sync_manifest": true,
+    "sync_files": sync_files
+  };
+
+  if (doc) {
+    // update/change source
+    db_sources.merge(name, sync_source, function(err, doc) {
+      console.log("changed source " + name);
+    });
+  } else {
+    // add new source
+    db_sources.save(name, sync_source, function(err, doc) {
+      console.log("added source " + name);
+    });
+  }
+});
