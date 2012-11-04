@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+var path = require('path'),
+    fs = require('fs'),
+    lib = path.join(path.dirname(fs.realpathSync(__filename)), '../lib/');
+
+var config = require(lib + 'config');
+
+var async = require('async');
+
+var db = config.database(config.COUCHDB_DATASETS);
+
+db.view('datasets/published_at', { descending: true }, function(err, rows) {
+  async.forEachSeries(rows, function(item, next_item) {
+		console.log("found manifest: " + item.value.urn);
+
+    var updateHostname = function(file, next) {
+      file.url = [config.DSAPI_ROOT, item.value.uuid, file.path].join('/');
+
+      next();
+    }
+
+		if (item.value._attachments) {
+	    async.mapSeries(item.value.files, updateHostname, function(err) {
+	      db.merge(item.value.uuid, { "files": item.value.files }, function(err, res) {
+	        next_item(null);
+	      });
+	    });
+		}
+  }, function(err) {
+    console.log('done.');
+  });
+});
