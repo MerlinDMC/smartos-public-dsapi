@@ -1,8 +1,8 @@
 <?xml version='1.0'?>
 <!DOCTYPE service_bundle SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
-<service_bundle type='manifest' name='dsapid'>
-  <service name='application/dsapid' type='service' version='1'>
-    <create_default_instance enabled='false'/>
+<service_bundle type='manifest' name='export'>
+  <service name='application/dsapid' type='service' version='2'>
+    <create_default_instance enabled='true'/>
     <single_instance/>
     <dependency name='network' grouping='require_all' restart_on='error' type='service'>
       <service_fmri value='svc:/milestone/network:default'/>
@@ -19,7 +19,15 @@
         <envvar name='PATH' value='/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin:/bin'/>
       </method_environment>
     </method_context>
-    <exec_method name='start' type='method' exec='/opt/dsapi/sbin/dsapid' timeout_seconds='60'/>
+    <exec_method name='start' type='method' exec='/opt/dsapi/sbin/dsapid' timeout_seconds='60'>
+      <method_context>
+        <method_environment>
+          <envvar name='DSAPI_HOST' value='127.0.0.1'/>
+          <envvar name='DSAPI_PORT' value='8080'/>
+          <envvar name='PATH' value='/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
+        </method_environment>
+      </method_context>
+    </exec_method>
     <exec_method name='stop' type='method' exec=':kill' timeout_seconds='60'/>
     <property_group name='startd' type='framework'>
       <propval name='duration' type='astring' value='child'/>
