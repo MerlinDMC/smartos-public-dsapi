@@ -4,7 +4,7 @@ to publish datasets and images for SmartOS
 
 The primary goal here is it to use the server with `imgadm` on SmartOS. The API is functional for that purpose and every aspect of the official API that is not needed for `imgadm` has second priority.
 
-Version **0.0.1** is tested with `imgadm` on platform 20120809T221258Z.
+Version **0.1.0** is tested with `imgadm` on platform 20130125T031721Z.
 
 Why did we build this?
 ----------------------
@@ -20,4 +20,5 @@ Differences from the official dsapi
 
 Version history
 ---------------
+0.1.0: host readme file alongside datasets
 0.0.1: initial public version
