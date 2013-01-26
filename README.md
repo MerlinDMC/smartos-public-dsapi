@@ -4,7 +4,7 @@ A dataset server to publish datasets and images for SmartOS
 
 The objective is a fully functional private dataset server that can be used via `imgadm` on SmartOS. The API has been designed solely for interoperability with `imgadm` for the purposes of Dataset serving. At the moment all other functionality has second priority but may be implemented in the future.
 
-Version **0.1.0** is tested with `imgadm` on platform 20130125T031721Z.
+Version **0.1.1** is tested with `imgadm` on platform 20130125T031721Z.
 
 Why did we build this?
 ----------------------
@@ -53,5 +53,6 @@ This can be pushed via curl e.g.
 
 Version history
 ---------------
-0.1.0: host readme file alongside datasets
-0.0.1: initial public version
+0.1.1: renamed special attributes  
+0.1.0: host readme file alongside datasets  
+0.0.1: initial public version  
