@@ -20,6 +20,8 @@ Differences from the official dsapi
 
 Version history
 ---------------
+0.1.3: -- bumping for fun --
+0.1.2: fixed the content-type header for the /ping resource
 0.1.1: renamed special attributes  
 0.1.0: host readme file alongside datasets  
 0.0.1: initial public version  
