@@ -24,6 +24,7 @@
         <method_environment>
           <envvar name='DSAPI_HOST' value='127.0.0.1'/>
           <envvar name='DSAPI_PORT' value='8080'/>
+          <envvar name='DSAPI_UPLOADTMP' value='/var/tmp'/>
           <envvar name='PATH' value='/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
         </method_environment>
       </method_context>
